@@ -20,6 +20,7 @@ use App\Http\Controllers\ContainerController;
 use App\Http\Controllers\CustomsDocumentController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
