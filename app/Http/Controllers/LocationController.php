@@ -9,7 +9,7 @@ class LocationController extends Controller
 {
     public function index()
     {
-        return Location::all();
+        return Location::with('warehouse')->get();
     }
 
     public function store(Request $request)

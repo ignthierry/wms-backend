@@ -9,7 +9,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        return Client::all();
+        return Client::with('user')->get();
     }
 
     public function store(Request $request)
