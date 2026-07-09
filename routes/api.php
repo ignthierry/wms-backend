@@ -35,8 +35,9 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('users', UserController::class);
+Route::apiResource('asns', AsnController::class);
+Route::apiResource('asn-items', AsnItemController::class);
 Route::apiResource('clients', ClientController::class);
-
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('locations', LocationController::class);
 
@@ -44,8 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-    Route::apiResource('asns', AsnController::class);
-    Route::apiResource('asn-items', AsnItemController::class);
     Route::apiResource('receivings', ReceivingController::class);
     Route::apiResource('deviations', DeviationController::class);
     Route::apiResource('stocks', StockController::class);

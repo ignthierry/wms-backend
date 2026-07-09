@@ -75,26 +75,48 @@ class DatabaseSeeder extends Seeder
         );
 
         $clientUser = User::firstOrCreate(
-            ['username' => 'client01'],
+            ['username' => 'emkl01'],
             [
                 'role_id' => $clientRole->id,
-                'email' => 'client01@example.com',
+                'email' => 'emkl01@example.com',
                 'password' => $defaultPassword,
-                'name' => 'Client User 01',
+                'name' => 'PT EMKL Logistics',
                 'phone' => '081234567893',
                 'is_active' => true,
             ]
         );
 
-        // 3. Create Client Data
+        // 3. Create Client/Consignee Data
         $client = Client::firstOrCreate(
-            ['user_id' => $clientUser->id],
+            ['client_name' => 'PT Consignee Satu'],
             [
-                'client_name' => 'PT Client Satu',
-                'company_name' => 'PT Client Satu Tbk',
-                'email' => 'info@clientsatu.com',
+                'user_id' => $clientUser->id,
+                'company_name' => 'PT Consignee Satu Tbk',
+                'email' => 'info@consigneesatu.com',
                 'phone' => '021-1234567',
                 'address' => 'Jl. Sudirman No. 1, Jakarta',
+            ]
+        );
+
+        $client2 = Client::firstOrCreate(
+            ['client_name' => 'PT Consignee Dua'],
+            [
+                'user_id' => $clientUser->id,
+                'company_name' => 'PT Consignee Dua Maju',
+                'email' => 'contact@consigneedua.com',
+                'phone' => '021-7654321',
+                'address' => 'Jl. Thamrin No. 2, Jakarta',
+            ]
+        );
+
+        $client3 = Client::firstOrCreate(
+            ['client_name' => 'PT Consignee Tiga'],
+            [
+                'user_id' => $clientUser->id,
+                'company_name' => 'PT Consignee Tiga Jaya',
+                'email' => 'hello@consigneetiga.com',
+                'phone' => '021-1122334',
+                'address' => 'Jl. Gatot Subroto No. 3, Jakarta',
             ]
         );
 
