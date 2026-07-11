@@ -17,11 +17,33 @@ class AsnItem extends Model
         'lot_number',
         'expiry_date',
         'actual_weight',
-        'actual_volume'
+        'actual_volume',
+        'host_bl',
+        'consignee_id',
+        'packaging',
+        'item_condition',
+        'remarks',
+        'photo_proof',
+        'qr_id',
+        'block_location'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($asnItem) {
+            if (empty($asnItem->qr_id)) {
+                $asnItem->qr_id = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     public function asn()
     {
         return $this->belongsTo(Asn::class);
+    }
+
+    public function consignee()
+    {
+        return $this->belongsTo(Consignee::class);
     }
 }

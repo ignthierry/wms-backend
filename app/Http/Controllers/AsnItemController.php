@@ -31,7 +31,14 @@ class AsnItemController extends Controller
     public function update(Request $request, string $id)
     {
         $item = AsnItem::findOrFail($id);
-        $item->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo_proof_file')) {
+            $path = $request->file('photo_proof_file')->store('public/photo_proofs');
+            $data['photo_proof'] = str_replace('public/', 'storage/', $path);
+        }
+
+        $item->update($data);
         return response()->json($item);
     }
 
@@ -40,5 +47,11 @@ class AsnItemController extends Controller
         $item = AsnItem::findOrFail($id);
         $item->delete();
         return response()->json(null, 204);
+    }
+
+    public function findByQr(string $qr_id)
+    {
+        $item = AsnItem::where('qr_id', $qr_id)->with(['asn', 'consignee'])->firstOrFail();
+        return response()->json($item);
     }
 }

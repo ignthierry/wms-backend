@@ -28,7 +28,8 @@ class Asn extends Model
         'jumlah_pos',
         'no_container',
         'size',
-        'qr_id'
+        'qr_id',
+        'trucking_company'
     ];
 
     protected static function booted()
