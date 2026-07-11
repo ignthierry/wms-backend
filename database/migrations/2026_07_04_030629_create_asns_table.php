@@ -17,6 +17,20 @@ return new class extends Migration
             $table->string('driver_name', 100)->nullable();
             $table->string('vehicle_plate', 30)->nullable();
             $table->string('status', 50)->default('PENDING');
+            
+            // LCL Manifest Fields
+            $table->string('no_master_bl', 100)->nullable();
+            $table->date('tgl')->nullable();
+            $table->date('tanggal_tiba')->nullable();
+            $table->date('tanggal_stripping')->nullable();
+            $table->date('tgl_in_container')->nullable();
+            $table->date('out_container')->nullable();
+            $table->string('no_segel', 100)->nullable();
+            $table->string('voyage', 100)->nullable();
+            $table->integer('jumlah_pos')->nullable();
+            $table->string('no_container', 100)->nullable();
+            $table->string('size', 50)->nullable();
+
             $table->timestamps();
             
             $table->index('status', 'idx_asn_status');

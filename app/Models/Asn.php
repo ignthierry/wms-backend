@@ -16,8 +16,29 @@ class Asn extends Model
         'eta',
         'driver_name',
         'vehicle_plate',
-        'status'
+        'status',
+        'no_master_bl',
+        'tgl',
+        'tanggal_tiba',
+        'tanggal_stripping',
+        'tgl_in_container',
+        'out_container',
+        'no_segel',
+        'voyage',
+        'jumlah_pos',
+        'no_container',
+        'size',
+        'qr_id'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($asn) {
+            if (empty($asn->qr_id)) {
+                $asn->qr_id = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     public function client()
     {

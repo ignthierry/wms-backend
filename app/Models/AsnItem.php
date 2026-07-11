@@ -15,7 +15,9 @@ class AsnItem extends Model
         'item_name',
         'qty_expected',
         'lot_number',
-        'expiry_date'
+        'expiry_date',
+        'actual_weight',
+        'actual_volume'
     ];
 
     public function asn()
