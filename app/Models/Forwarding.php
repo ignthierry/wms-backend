@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Forwarding extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'client_name',
+        'forwarding_name',
         'company_name',
         'email',
         'phone',
@@ -21,5 +21,10 @@ class Client extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function consignees()
+    {
+        return $this->hasMany(Consignee::class);
     }
 }

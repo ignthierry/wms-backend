@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients')->restrictOnDelete();
+            $table->foreignId('forwarding_id')->constrained('forwardings')->restrictOnDelete();
             $table->foreignId('location_id')->constrained('locations')->restrictOnDelete();
             $table->string('item_code', 100);
             $table->string('item_name', 255);

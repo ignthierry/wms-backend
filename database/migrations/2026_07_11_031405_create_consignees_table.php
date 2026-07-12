@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('consignees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('forwarding_id')->constrained('forwardings')->cascadeOnDelete();
             $table->string('name', 150);
             $table->string('email', 150)->nullable();
             $table->string('phone', 30)->nullable();

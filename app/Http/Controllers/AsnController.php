@@ -9,7 +9,7 @@ class AsnController extends Controller
 {
     public function index()
     {
-        return Asn::with(['client', 'warehouse', 'items'])->get();
+        return Asn::with(['forwarding', 'warehouse', 'items'])->get();
     }
 
     public function store(Request $request)
@@ -23,12 +23,12 @@ class AsnController extends Controller
             }
         }
         
-        return response()->json($item->load(['client', 'warehouse', 'items']), 201);
+        return response()->json($item->load(['forwarding', 'warehouse', 'items']), 201);
     }
 
     public function show(string $id)
     {
-        $item = Asn::with(['client', 'warehouse', 'items'])->findOrFail($id);
+        $item = Asn::with(['forwarding', 'warehouse', 'items'])->findOrFail($id);
         return response()->json($item);
     }
 
@@ -46,7 +46,7 @@ class AsnController extends Controller
             }
         }
 
-        return response()->json($item->load(['client', 'warehouse', 'items']));
+        return response()->json($item->load(['forwarding', 'warehouse', 'items']));
     }
 
     public function destroy(string $id)

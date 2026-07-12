@@ -8,22 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('forwardings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('client_name', 150);
+            $table->string('forwarding_name', 150);
             $table->string('company_name', 200);
             $table->string('email', 150)->nullable();
             $table->string('phone', 50)->nullable();
             $table->text('address')->nullable();
             $table->timestamps();
             
-            $table->index('client_name', 'idx_client_name');
+            $table->index('forwarding_name', 'idx_forwarding_name');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('forwardings');
     }
 };

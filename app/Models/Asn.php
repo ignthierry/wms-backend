@@ -10,7 +10,7 @@ class Asn extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
+        'forwarding_id',
         'warehouse_id',
         'asn_number',
         'eta',
@@ -41,9 +41,9 @@ class Asn extends Model
         });
     }
 
-    public function client()
+    public function forwarding()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Forwarding::class);
     }
 
     public function warehouse()

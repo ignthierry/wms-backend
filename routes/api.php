@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ForwardingController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\AsnController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\PackingController;
 use App\Http\Controllers\DispatchController;
 use App\Http\Controllers\SystemLogController;
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\ConsigneeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,10 +38,10 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('asns', AsnController::class);
 Route::apiResource('asn-items', AsnItemController::class);
-Route::apiResource('clients', ClientController::class);
+Route::apiResource('forwardings', ForwardingController::class);
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('locations', LocationController::class);
-
+Route::apiResource('consignees', ConsigneeController::class);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -57,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('dispatches', DispatchController::class);
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
-    Route::apiResource('consignees', ConsigneeController::class);
+
     
     Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
     

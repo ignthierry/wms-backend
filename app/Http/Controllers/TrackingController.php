@@ -25,7 +25,7 @@ class TrackingController extends Controller
         // Try finding by Master BL or Container Number (Forwarding level)
         $asns = Asn::where('no_master_bl', $identifier)
             ->orWhere('no_container', $identifier)
-            ->with(['items.consignee', 'client', 'warehouse'])
+            ->with(['items.consignee', 'forwarding', 'warehouse'])
             ->get();
             
         if ($asns->count() > 0) {

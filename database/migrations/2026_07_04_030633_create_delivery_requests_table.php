@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('delivery_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients')->restrictOnDelete();
+            $table->foreignId('forwarding_id')->constrained('forwardings')->restrictOnDelete();
             $table->foreignId('warehouse_id')->constrained('warehouses')->restrictOnDelete();
             $table->string('dr_number', 100)->unique();
             $table->dateTime('request_date');
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
             
             $table->index('status', 'idx_dr_status');
-            $table->index('client_id', 'idx_dr_client');
+            $table->index('forwarding_id', 'idx_dr_forwarding');
         });
     }
 

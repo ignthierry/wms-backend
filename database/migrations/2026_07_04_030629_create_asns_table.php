@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('asns', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained('clients')->restrictOnDelete();
+            $table->foreignId('forwarding_id')->constrained('forwardings')->restrictOnDelete();
             $table->foreignId('warehouse_id')->constrained('warehouses')->restrictOnDelete();
             $table->string('asn_number', 100)->unique();
             $table->dateTime('eta');
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamps();
             
             $table->index('status', 'idx_asn_status');
-            $table->index('client_id', 'idx_asn_client');
+            $table->index('forwarding_id', 'idx_asn_forwarding');
         });
     }
 

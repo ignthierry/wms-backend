@@ -14,7 +14,7 @@ class AsnItem extends Model
         'item_code',
         'item_name',
         'qty_expected',
-        'lot_number',
+        'pos_number',
         'expiry_date',
         'actual_weight',
         'actual_volume',

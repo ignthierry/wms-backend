@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Client;
+use App\Models\Forwarding;
 use App\Models\Warehouse;
 use App\Models\Location;
 use App\Models\Stock;
@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             ['role_name' => 'super_admin', 'description' => 'Super Administrator with full access'],
             ['role_name' => 'warehouse_admin', 'description' => 'Warehouse Administrator'],
             ['role_name' => 'operator_field', 'description' => 'Field Operator / Picker'],
-            ['role_name' => 'client', 'description' => 'Client / Customer'],
+            ['role_name' => 'forwarding', 'description' => 'Forwarding / EMKL'],
         ];
 
         foreach ($rolesData as $role) {
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::where('role_name', 'super_admin')->first();
         $whAdminRole = Role::where('role_name', 'warehouse_admin')->first();
         $operatorRole = Role::where('role_name', 'operator_field')->first();
-        $clientRole = Role::where('role_name', 'client')->first();
+        $clientRole = Role::where('role_name', 'forwarding')->first();
 
         $defaultPassword = Hash::make('password');
 
@@ -86,34 +86,34 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Create Client/Consignee Data
-        $client = Client::firstOrCreate(
-            ['client_name' => 'PT Consignee Satu'],
+        // 3. Create Forwarding Data
+        $client = Forwarding::firstOrCreate(
+            ['forwarding_name' => 'PT Forwarding Satu'],
             [
                 'user_id' => $clientUser->id,
-                'company_name' => 'PT Consignee Satu Tbk',
+                'company_name' => 'PT Forwarding Satu Tbk',
                 'email' => 'info@consigneesatu.com',
                 'phone' => '021-1234567',
                 'address' => 'Jl. Sudirman No. 1, Jakarta',
             ]
         );
 
-        $client2 = Client::firstOrCreate(
-            ['client_name' => 'PT Consignee Dua'],
+        $client2 = Forwarding::firstOrCreate(
+            ['forwarding_name' => 'PT Forwarding Dua'],
             [
                 'user_id' => $clientUser->id,
-                'company_name' => 'PT Consignee Dua Maju',
+                'company_name' => 'PT Forwarding Dua Maju',
                 'email' => 'contact@consigneedua.com',
                 'phone' => '021-7654321',
                 'address' => 'Jl. Thamrin No. 2, Jakarta',
             ]
         );
 
-        $client3 = Client::firstOrCreate(
-            ['client_name' => 'PT Consignee Tiga'],
+        $client3 = Forwarding::firstOrCreate(
+            ['forwarding_name' => 'PT Forwarding Tiga'],
             [
                 'user_id' => $clientUser->id,
-                'company_name' => 'PT Consignee Tiga Jaya',
+                'company_name' => 'PT Forwarding Tiga Jaya',
                 'email' => 'hello@consigneetiga.com',
                 'phone' => '021-1122334',
                 'address' => 'Jl. Gatot Subroto No. 3, Jakarta',
@@ -162,7 +162,7 @@ class DatabaseSeeder extends Seeder
         if ($location) {
             Stock::firstOrCreate(
                 [
-                    'client_id' => $client->id,
+                    'forwarding_id' => $client->id,
                     'location_id' => $location->id,
                     'item_code' => 'ITEM-001',
                     'lot_number' => 'LOT-2026-001',
@@ -181,7 +181,7 @@ class DatabaseSeeder extends Seeder
         if ($location2) {
             Stock::firstOrCreate(
                 [
-                    'client_id' => $client->id,
+                    'forwarding_id' => $client->id,
                     'location_id' => $location2->id,
                     'item_code' => 'ITEM-002',
                     'lot_number' => 'LOT-2026-002',

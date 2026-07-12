@@ -10,7 +10,7 @@ class DeliveryRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
+        'forwarding_id',
         'warehouse_id',
         'dr_number',
         'request_date',
@@ -19,9 +19,9 @@ class DeliveryRequest extends Model
         'status'
     ];
 
-    public function client()
+    public function forwarding()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Forwarding::class);
     }
 
     public function warehouse()

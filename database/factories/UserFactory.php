@@ -24,21 +24,20 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'role_id' => 4, // Default to client role
+            'username' => fake()->unique()->userName(),
             'name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'phone' => fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'bio' => fake()->sentence(),
+            'facebook_link' => 'https://facebook.com/' . fake()->userName(),
+            'twitter_link' => 'https://twitter.com/' . fake()->userName(),
+            'linkedin_link' => 'https://linkedin.com/in/' . fake()->userName(),
+            'instagram_link' => 'https://instagram.com/' . fake()->userName(),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
-    }
 }

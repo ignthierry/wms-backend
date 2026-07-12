@@ -10,7 +10,7 @@ class Stock extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',
+        'forwarding_id',
         'location_id',
         'item_code',
         'item_name',
@@ -21,9 +21,9 @@ class Stock extends Model
         'received_date'
     ];
 
-    public function client()
+    public function forwarding()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Forwarding::class);
     }
 
     public function location()
