@@ -10,7 +10,9 @@ use App\Models\Forwarding;
 use App\Models\Warehouse;
 use App\Models\Location;
 use App\Models\Stock;
-
+use App\Models\Consignee;
+use App\Models\Asn;
+use App\Models\AsnItem;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -195,5 +197,85 @@ class DatabaseSeeder extends Seeder
             );
             $location2->update(['is_empty' => false]);
         }
+
+        // 7. Create Dummy Consignee
+        $consignee = Consignee::firstOrCreate(
+            ['name' => 'PT Consignee Sejahtera'],
+            [
+                'email' => 'contact@consigneesejahtera.com',
+                'phone' => '021-99887766',
+                'address' => 'Jl. Merdeka No. 45, Jakarta',
+                'status' => 'active'
+            ]
+        );
+
+        $consignee2 = Consignee::firstOrCreate(
+            ['name' => 'CV Makmur Abadi'],
+            [
+                'email' => 'info@makmurabadi.com',
+                'phone' => '021-55443322',
+                'address' => 'Jl. Jendral Sudirman No. 99, Surabaya',
+                'status' => 'active'
+            ]
+        );
+
+        // 8. Create Dummy ASN (LCL Manifest) and Transactions (Pos)
+        $asn = Asn::firstOrCreate(
+            ['asn_number' => 'ASN-1234567890'],
+            [
+                'forwarding_id' => $client->id,
+                'warehouse_id' => $warehouse->id,
+                'eta' => '2026-08-01 10:00:00',
+                'vehicle_plate' => 'B 1234 CD',
+                'status' => 'PENDING',
+                'no_master_bl' => 'MBL-987654321',
+                'no_container' => 'CONT-112233',
+                'voyage' => 'V-404',
+                'jumlah_pos' => 2,
+                'trucking_company' => 'PT Trucking Cepat',
+                'tgl' => '2026-07-28 08:00:00', // Tanggal Manifest
+                'tanggal_tiba' => '2026-08-01 10:00:00',
+                'tanggal_stripping' => '2026-08-02 09:00:00',
+                'tgl_in_container' => '2026-07-29 14:00:00',
+                'out_container' => '2026-08-03 15:00:00',
+                'no_segel' => 'SGL-556677'
+            ]
+        );
+
+        // Pos 1
+        AsnItem::firstOrCreate(
+            [
+                'asn_id' => $asn->id,
+                'item_code' => 'ITM-ASN-1234567890-P1',
+            ],
+            [
+                'item_name' => 'Sparepart Mesin A',
+                'qty_expected' => 50,
+                'pos_number' => '1',
+                'host_bl' => 'HBL-001',
+                'consignee_id' => $consignee->id,
+                'packaging' => 'Carton',
+                'actual_weight' => 150.5,
+                'actual_volume' => 2.5
+            ]
+        );
+
+        // Pos 2
+        AsnItem::firstOrCreate(
+            [
+                'asn_id' => $asn->id,
+                'item_code' => 'ITM-ASN-1234567890-P2',
+            ],
+            [
+                'item_name' => 'Bahan Kimia Industri',
+                'qty_expected' => 200,
+                'pos_number' => '2',
+                'host_bl' => 'HBL-002',
+                'consignee_id' => $consignee2->id,
+                'packaging' => 'Drum',
+                'actual_weight' => 500.0,
+                'actual_volume' => 10.0
+            ]
+        );
     }
 }

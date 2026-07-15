@@ -24,7 +24,7 @@ class AsnItemController extends Controller
 
     public function show(string $id)
     {
-        $item = AsnItem::findOrFail($id);
+        $item = AsnItem::with(['asn.forwarding', 'asn.warehouse', 'consignee'])->findOrFail($id);
         return response()->json($item);
     }
 
@@ -51,7 +51,16 @@ class AsnItemController extends Controller
 
     public function findByQr(string $qr_id)
     {
-        $item = AsnItem::where('qr_id', $qr_id)->with(['asn', 'consignee'])->firstOrFail();
+        $query = AsnItem::with(['asn', 'consignee']);
+        
+        if (str_starts_with($qr_id, 'ITEM-')) {
+            $id = str_replace('ITEM-', '', $qr_id);
+            $query->where('id', $id)->orWhere('qr_id', $qr_id);
+        } else {
+            $query->where('qr_id', $qr_id);
+        }
+
+        $item = $query->firstOrFail();
         return response()->json($item);
     }
 }

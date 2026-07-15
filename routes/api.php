@@ -42,6 +42,8 @@ Route::apiResource('forwardings', ForwardingController::class);
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('locations', LocationController::class);
 Route::apiResource('consignees', ConsigneeController::class);
+Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -59,8 +61,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
 
-    
-    Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
     
     Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);
     Route::post('invoices/generate/{asn}', [App\Http\Controllers\InvoiceController::class, 'store']);

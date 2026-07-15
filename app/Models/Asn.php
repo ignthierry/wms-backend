@@ -36,7 +36,7 @@ class Asn extends Model
     {
         static::creating(function ($asn) {
             if (empty($asn->qr_id)) {
-                $asn->qr_id = (string) \Illuminate\Support\Str::uuid();
+                $asn->qr_id = 'ASN-' . strtoupper(\Illuminate\Support\Str::random(8));
             }
         });
     }

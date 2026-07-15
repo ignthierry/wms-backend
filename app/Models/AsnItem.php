@@ -32,7 +32,7 @@ class AsnItem extends Model
     {
         static::creating(function ($asnItem) {
             if (empty($asnItem->qr_id)) {
-                $asnItem->qr_id = (string) \Illuminate\Support\Str::uuid();
+                $asnItem->qr_id = 'ITM-' . strtoupper(\Illuminate\Support\Str::random(8));
             }
         });
     }
