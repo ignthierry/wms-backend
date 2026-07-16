@@ -9,7 +9,7 @@ class AsnItemController extends Controller
 {
     public function index()
     {
-        return AsnItem::all();
+        return AsnItem::with(['asn', 'consignee', 'invoice'])->get();
     }
 
     public function store(Request $request)

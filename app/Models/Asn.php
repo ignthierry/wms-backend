@@ -16,7 +16,6 @@ class Asn extends Model
         'eta',
         'driver_name',
         'vehicle_plate',
-        'status',
         'no_master_bl',
         'tgl',
         'tanggal_tiba',
@@ -54,5 +53,10 @@ class Asn extends Model
     public function items()
     {
         return $this->hasMany(AsnItem::class);
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
     }
 }

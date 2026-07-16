@@ -25,7 +25,8 @@ class AsnItem extends Model
         'remarks',
         'photo_proof',
         'qr_id',
-        'block_location'
+        'block_location',
+        'status'
     ];
 
     protected static function booted()
@@ -45,5 +46,15 @@ class AsnItem extends Model
     public function consignee()
     {
         return $this->belongsTo(Consignee::class);
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'asn_item_id');
+    }
+
+    public function deliveryRequest()
+    {
+        return $this->hasOne(DeliveryRequest::class, 'asn_item_id');
     }
 }

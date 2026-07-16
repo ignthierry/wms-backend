@@ -11,6 +11,7 @@ class Invoice extends Model
 
     protected $fillable = [
         'asn_id',
+        'asn_item_id',
         'invoice_number',
         'storage_fee',
         'handling_fee',
@@ -22,5 +23,10 @@ class Invoice extends Model
     public function asn()
     {
         return $this->belongsTo(Asn::class);
+    }
+
+    public function asnItem()
+    {
+        return $this->belongsTo(AsnItem::class);
     }
 }

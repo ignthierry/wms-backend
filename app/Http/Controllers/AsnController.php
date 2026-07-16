@@ -9,7 +9,7 @@ class AsnController extends Controller
 {
     public function index()
     {
-        return Asn::with(['forwarding', 'warehouse', 'items'])->get();
+        return Asn::with(['forwarding', 'warehouse', 'items', 'invoice'])->get();
     }
 
     public function store(Request $request)

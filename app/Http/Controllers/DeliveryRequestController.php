@@ -15,7 +15,7 @@ class DeliveryRequestController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'asn_id' => 'required|exists:asns,id',
+            'asn_item_id' => 'required|exists:asn_items,id',
             'no_sppb' => 'required|string',
             'tgl_sppb' => 'required|date',
             'jenis_sppb' => 'required|string',
@@ -23,12 +23,14 @@ class DeliveryRequestController extends Controller
             'tgl_invoice' => 'required|date',
         ]);
 
-        $asn = \App\Models\Asn::with('items')->findOrFail($data['asn_id']);
+        $asnItem = \App\Models\AsnItem::with('asn')->findOrFail($data['asn_item_id']);
+        $asn = $asnItem->asn;
         
         $drNumber = 'DR-' . date('Ymd') . '-' . rand(1000, 9999);
         
         $dr = DeliveryRequest::create([
             'asn_id' => $asn->id,
+            'asn_item_id' => $asnItem->id,
             'warehouse_id' => $asn->warehouse_id,
             'forwarding_id' => $asn->forwarding_id,
             'dr_number' => $drNumber,
@@ -42,26 +44,16 @@ class DeliveryRequestController extends Controller
             'no_referensi' => $data['no_referensi'],
         ]);
 
-        foreach($asn->items as $item) {
-            \App\Models\DrItem::create([
-                'dr_id' => $dr->id,
-                'item_code' => $item->item_code,
-                'qty_requested' => $item->qty_expected,
-                'lot_number' => $item->pos_number ?? ''
-            ]);
-        }
-
-        $invoiceNumber = 'INV-' . date('Ymd') . '-' . rand(1000, 9999);
-
-        $invoice = \App\Models\Invoice::create([
-            'asn_id' => $asn->id,
-            'invoice_number' => $invoiceNumber,
-            'storage_fee' => 100000, 
-            'handling_fee' => 50000, 
-            'total_amount' => 150000, 
-            'status' => 'UNPAID',
-            'tgl_invoice' => $data['tgl_invoice']
+        \App\Models\DrItem::create([
+            'dr_id' => $dr->id,
+            'item_code' => $asnItem->item_code,
+            'qty_requested' => $asnItem->qty_expected,
+            'lot_number' => $asnItem->pos_number ?? ''
         ]);
+
+        $invoiceController = app(\App\Http\Controllers\InvoiceController::class);
+        $invoiceResponse = $invoiceController->store($request, $asnItem->id);
+        $invoice = $invoiceResponse->getData(true);
 
         // Optional: Update ASN status
         // $asn->update(['status' => 'DELIVERY_REQUESTED']);

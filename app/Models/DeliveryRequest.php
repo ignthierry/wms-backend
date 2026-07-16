@@ -13,6 +13,7 @@ class DeliveryRequest extends Model
         'forwarding_id',
         'warehouse_id',
         'asn_id',
+        'asn_item_id',
         'dr_number',
         'request_date',
         'recipient_name',
