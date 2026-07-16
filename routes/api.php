@@ -24,6 +24,7 @@ use App\Http\Controllers\DispatchController;
 use App\Http\Controllers\SystemLogController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ConsigneeController;
+use App\Http\Controllers\TarifController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::apiResource('forwardings', ForwardingController::class);
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('locations', LocationController::class);
 Route::apiResource('consignees', ConsigneeController::class);
+Route::apiResource('tarifs', TarifController::class);
 Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -60,8 +62,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('dispatches', DispatchController::class);
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
-
     
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
+
+
     Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);
     Route::post('invoices/generate/{asn}', [App\Http\Controllers\InvoiceController::class, 'store']);
 });

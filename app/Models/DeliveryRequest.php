@@ -12,11 +12,16 @@ class DeliveryRequest extends Model
     protected $fillable = [
         'forwarding_id',
         'warehouse_id',
+        'asn_id',
         'dr_number',
         'request_date',
         'recipient_name',
         'delivery_address',
-        'status'
+        'status',
+        'no_sppb',
+        'tgl_sppb',
+        'jenis_sppb',
+        'no_referensi'
     ];
 
     public function forwarding()
@@ -27,6 +32,11 @@ class DeliveryRequest extends Model
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
+    }
+
+    public function asn()
+    {
+        return $this->belongsTo(Asn::class, 'asn_id');
     }
 
     public function items()

@@ -15,7 +15,8 @@ class Invoice extends Model
         'storage_fee',
         'handling_fee',
         'total_amount',
-        'status'
+        'status',
+        'tgl_invoice'
     ];
 
     public function asn()
