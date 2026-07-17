@@ -227,7 +227,6 @@ class DatabaseSeeder extends Seeder
                 'warehouse_id' => $warehouse->id,
                 'eta' => '2026-08-01 10:00:00',
                 'vehicle_plate' => 'B 1234 CD',
-                'status' => 'PENDING',
                 'no_master_bl' => 'MBL-987654321',
                 'no_container' => 'CONT-112233',
                 'voyage' => 'V-404',

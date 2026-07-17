@@ -34,8 +34,9 @@ class AsnItemController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo_proof_file')) {
-            $path = $request->file('photo_proof_file')->store('public/photo_proofs');
-            $data['photo_proof'] = str_replace('public/', 'storage/', $path);
+            // Upload to SFTP server instead of local disk
+            $path = $request->file('photo_proof_file')->store('photo_proofs', 'sftp');
+            $data['photo_proof'] = $path; // This saves only the path string like 'photo_proofs/filename.jpg'
         }
 
         $item->update($data);

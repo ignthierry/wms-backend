@@ -72,3 +72,21 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // External Portal Tracking Routes
 Route::get('tracking/cargo/{identifier}', [App\Http\Controllers\TrackingController::class, 'trackCargo']);
+
+// Photo Proxy Route for SFTP
+Route::get('photos/{filename}', function ($filename) {
+    $disk = \Illuminate\Support\Facades\Storage::disk('sftp');
+    // Ensure filename matches how it's stored, which might include the directory
+    // If it's passed as just the filename, we prepend the directory
+    // In our db it's stored as 'photo_proofs/filename.jpg', so let's allow fetching by path
+    $path = 'photo_proofs/' . basename($filename);
+    
+    if (!$disk->exists($path)) {
+        abort(404, 'Photo not found on SFTP server');
+    }
+    
+    $file = $disk->get($path);
+    $type = $disk->mimeType($path);
+    
+    return response($file, 200)->header("Content-Type", $type);
+});
