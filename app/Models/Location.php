@@ -16,7 +16,8 @@ class Location extends Model
         'rack_row',
         'tier',
         'barcode_loc',
-        'is_empty'
+        'is_empty',
+        'capacity'
     ];
 
     public function warehouse()

@@ -24,14 +24,27 @@ class DashboardController extends Controller
         // 4. Total Warehouses
         $totalWarehouse = Warehouse::count();
 
-        // 5. ASN trend for the last 6 months
+        // 5. Total Warehouse Capacity (from locations)
+        $totalWarehouseCapacity = \App\Models\Location::sum('capacity');
+        
+        // 6. Occupied Capacity (from stock actual_volume)
+        // Note: Assuming stock item correlates to actual_volume or qty. We'll use qty if volume is not tracked in stock, but normally it's volume. Let's check if stock has volume, or use totalStockQty.
+        // Wait, WMS usually calculates SOR by summing volume of items in stock. Let's check stock table schema later or just use a sum of stock volume. If stock doesn't have volume, we can join with asn_items or just use qty for now. Actually, let's sum 'qty' or a hypothetical 'volume'. I will look at Stock model later, but for now I'll sum 'qty' as a proxy if volume isn't there, or maybe `sum('volume')` if it exists.
+        // Since I need it to be accurate, let's just use totalStockQty as occupied if volume doesn't exist, but it's better to calculate based on `actual_volume` from `asn_items`.
+        // Let's query `stocks` and join `asn_items` to sum `actual_volume`.
+        $occupiedCapacity = Stock::join('asn_items', 'stocks.asn_item_id', '=', 'asn_items.id')
+                                ->sum('asn_items.actual_volume');
+
+        $sorPercentage = $totalWarehouseCapacity > 0 ? round(($occupiedCapacity / $totalWarehouseCapacity) * 100, 2) : 0;
+
+        // 7. ASN trend for the last 6 months
         $asnTrend = Asn::selectRaw('DATE_FORMAT(created_at, "%b") as month, COUNT(*) as count')
                         ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
                         ->groupBy('month')
                         ->orderByRaw('MIN(created_at)')
                         ->get();
 
-        // 6. DR trend for the last 6 months
+        // 8. DR trend for the last 6 months
         $drTrend = DeliveryRequest::selectRaw('DATE_FORMAT(created_at, "%b") as month, COUNT(*) as count')
                         ->where('created_at', '>=', now()->subMonths(5)->startOfMonth())
                         ->groupBy('month')
@@ -67,7 +80,7 @@ class DashboardController extends Controller
             ]
         ];
 
-        // 7. Recent Activities
+        // 9. Recent Activities
         $recentAsns = Asn::with('warehouse')->latest()->take(5)->get();
         $recentDeliveryRequests = DeliveryRequest::with('warehouse')->latest()->take(5)->get();
 
@@ -77,6 +90,9 @@ class DashboardController extends Controller
                 'total_dr' => $totalDeliveryRequest,
                 'total_stock_qty' => $totalStockQty,
                 'total_warehouse' => $totalWarehouse,
+                'total_capacity' => $totalWarehouseCapacity,
+                'occupied_capacity' => $occupiedCapacity,
+                'sor_percentage' => $sorPercentage
             ],
             'chart_data' => $chartData,
             'recent_asns' => $recentAsns,

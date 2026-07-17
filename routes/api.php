@@ -65,10 +65,10 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
 
-
-    Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);
-    Route::post('invoices/generate/{asn}', [App\Http\Controllers\InvoiceController::class, 'store']);
 });
+
+Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);
+Route::post('invoices/generate/{asn}', [App\Http\Controllers\InvoiceController::class, 'store']);
 
 // External Portal Tracking Routes
 Route::get('tracking/cargo/{identifier}', [App\Http\Controllers\TrackingController::class, 'trackCargo']);

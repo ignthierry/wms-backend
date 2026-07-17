@@ -57,4 +57,9 @@ class AsnItem extends Model
     {
         return $this->hasOne(DeliveryRequest::class, 'asn_item_id');
     }
+
+    public function photos()
+    {
+        return $this->hasMany(AsnItemPhoto::class, 'asn_item_id');
+    }
 }

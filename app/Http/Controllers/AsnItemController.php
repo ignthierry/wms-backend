@@ -9,7 +9,7 @@ class AsnItemController extends Controller
 {
     public function index()
     {
-        return AsnItem::with(['asn', 'consignee', 'invoice'])->get();
+        return AsnItem::with(['asn', 'consignee', 'invoice', 'photos'])->get();
     }
 
     public function store(Request $request)
@@ -24,23 +24,30 @@ class AsnItemController extends Controller
 
     public function show(string $id)
     {
-        $item = AsnItem::with(['asn.forwarding', 'asn.warehouse', 'consignee'])->findOrFail($id);
+        $item = AsnItem::with(['asn.forwarding', 'asn.warehouse', 'consignee', 'photos'])->findOrFail($id);
         return response()->json($item);
     }
 
     public function update(Request $request, string $id)
     {
         $item = AsnItem::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except(['photo_proof_files', 'jenis_foto']);
 
-        if ($request->hasFile('photo_proof_file')) {
-            // Upload to SFTP server instead of local disk
-            $path = $request->file('photo_proof_file')->store('photo_proofs', 'sftp');
-            $data['photo_proof'] = $path; // This saves only the path string like 'photo_proofs/filename.jpg'
+        if ($request->hasFile('photo_proof_files')) {
+            $files = $request->file('photo_proof_files');
+            $jenis_foto = $request->input('jenis_foto', 'in');
+
+            foreach ($files as $file) {
+                $path = $file->store('photo_proofs', 'sftp');
+                $item->photos()->create([
+                    'photo_proof' => $path,
+                    'jenis_foto' => $jenis_foto,
+                ]);
+            }
         }
 
         $item->update($data);
-        return response()->json($item);
+        return response()->json($item->load('photos'));
     }
 
     public function destroy(string $id)
@@ -52,7 +59,7 @@ class AsnItemController extends Controller
 
     public function findByQr(string $qr_id)
     {
-        $query = AsnItem::with(['asn', 'consignee']);
+        $query = AsnItem::with(['asn', 'consignee', 'photos']);
         
         if (str_starts_with($qr_id, 'ITEM-')) {
             $id = str_replace('ITEM-', '', $qr_id);
