@@ -61,7 +61,7 @@ return [
             'host' => env('SFTP_HOST'),
             'username' => env('SFTP_USERNAME'),
             'password' => env('SFTP_PASSWORD'),
-            'root' => '/var/www/ftp',
+            'root' => env('SFTP_ROOT', '/home/lunaftp/ftp/upload'),
             'throw' => false,
         ],
 
