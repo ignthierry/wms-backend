@@ -55,16 +55,16 @@ class InvoiceController extends Controller
             $masa_label = '';
             if ($i <= 5) {
                 $rate = $masa_1;
-                $masa_label = 'Masa 1 (Hari 1-5)';
+                $masa_label = 'Masa 1 (1-5)';
             } elseif ($i <= 10) {
                 $rate = $masa_2;
-                $masa_label = 'Masa 2 (Hari 6-10)';
+                $masa_label = 'Masa 2 (6-10)';
             } elseif ($i <= 15) {
                 $rate = $masa_3;
-                $masa_label = 'Masa 3 (Hari 11-15)';
+                $masa_label = 'Masa 3 (11-15)';
             } else {
                 $rate = $masa_4;
-                $masa_label = 'Masa 4 (Hari 16+)';
+                $masa_label = 'Masa 4 (16+)';
             }
             
             $day_fee = $total_capacity * $rate;
@@ -72,7 +72,7 @@ class InvoiceController extends Controller
             
             if (!isset($masa_summary[$masa_label])) {
                 $masa_summary[$masa_label] = [
-                    'keterangan' => 'PENUMPUKAN (STORAGE) - ' . $masa_label,
+                    'keterangan' => $masa_label,
                     'qty' => $total_capacity,
                     'unit' => 'M3/Ton',
                     'tarif' => $rate,
@@ -86,14 +86,6 @@ class InvoiceController extends Controller
         $storage_details = array_values($masa_summary);
 
         $other_fees = [
-            [
-                'keterangan' => 'BIAYA TPS ASAL (UTPK)',
-                'qty' => 1,
-                'unit' => 'Ls',
-                'tarif' => $tarif_tps_asal,
-                'hari' => 1,
-                'total' => 1 * $tarif_tps_asal
-            ],
             [
                 'keterangan' => 'MEKANIS',
                 'qty' => $total_capacity,
@@ -119,14 +111,6 @@ class InvoiceController extends Controller
                 'total' => $total_capacity * $tarif_delivery
             ],
             [
-                'keterangan' => 'BIAYA PEMERIKSAAN',
-                'qty' => 1,
-                'unit' => 'Ls',
-                'tarif' => $tarif_pemeriksaan,
-                'hari' => 1,
-                'total' => 1 * $tarif_pemeriksaan
-            ],
-            [
                 'keterangan' => 'SERVICE CHARGE',
                 'qty' => 1,
                 'unit' => 'Ls',
@@ -135,36 +119,12 @@ class InvoiceController extends Controller
                 'total' => 1 * $tarif_service
             ],
             [
-                'keterangan' => 'GERAKAN DAN PENGATURAN',
-                'qty' => $total_capacity,
-                'unit' => 'M3/Ton',
-                'tarif' => $tarif_gerakan,
-                'hari' => 1,
-                'total' => $total_capacity * $tarif_gerakan
-            ],
-            [
-                'keterangan' => 'KEAMANAN DAN KEBERSIHAN',
-                'qty' => 1,
-                'unit' => 'Ls',
-                'tarif' => $tarif_keamanan,
-                'hari' => 1,
-                'total' => 1 * $tarif_keamanan
-            ],
-            [
                 'keterangan' => 'ADMINISTRASI',
                 'qty' => 1,
                 'unit' => 'Ls',
                 'tarif' => $tarif_administrasi,
                 'hari' => 1,
                 'total' => 1 * $tarif_administrasi
-            ],
-            [
-                'keterangan' => 'FUEL SURCHARGE',
-                'qty' => 1,
-                'unit' => 'Cont',
-                'tarif' => $tarif_fuel,
-                'hari' => 1,
-                'total' => 1 * $tarif_fuel
             ]
         ];
 
@@ -174,10 +134,8 @@ class InvoiceController extends Controller
         }
 
         $ppn = $subtotal * 0.11; // 11% PPN
-
-        $moving_fee = 422500; // Dummy moving fee
-
-        $total_amount = $subtotal + $ppn + $moving_fee;
+        
+        $total_amount = $subtotal + $ppn;
 
         return response()->json([
             'asn_id' => $asn->id,
@@ -196,8 +154,10 @@ class InvoiceController extends Controller
             'other_fees' => $other_fees,
             'subtotal' => $subtotal,
             'ppn' => $ppn,
-            'moving_fee' => $moving_fee,
-            'total_amount' => $total_amount
+            'total_amount' => $total_amount,
+            'asn' => $asn,
+            'asn_item' => $asnItem->load('consignee'),
+            'invoice_number' => $invoice ? $invoice->invoice_number : 'Draft'
         ]);
     }
 
