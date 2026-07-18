@@ -39,6 +39,7 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('asns', AsnController::class);
 Route::apiResource('asn-items', AsnItemController::class);
+Route::get('asn-items/{id}/histories', [App\Http\Controllers\AsnItemController::class, 'histories']);
 Route::apiResource('forwardings', ForwardingController::class);
 Route::apiResource('warehouses', WarehouseController::class);
 Route::apiResource('locations', LocationController::class);

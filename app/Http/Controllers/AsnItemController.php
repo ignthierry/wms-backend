@@ -71,4 +71,11 @@ class AsnItemController extends Controller
         $item = $query->firstOrFail();
         return response()->json($item);
     }
+
+    public function histories(string $id)
+    {
+        $item = AsnItem::findOrFail($id);
+        $histories = $item->histories()->get();
+        return response()->json($histories);
+    }
 }
