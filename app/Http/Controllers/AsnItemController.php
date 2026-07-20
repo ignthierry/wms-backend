@@ -59,7 +59,7 @@ class AsnItemController extends Controller
 
     public function findByQr(string $qr_id)
     {
-        $query = AsnItem::with(['asn', 'consignee', 'photos']);
+        $query = AsnItem::with(['asn', 'consignee', 'photos', 'invoice', 'deliveryRequest']);
         
         if (str_starts_with($qr_id, 'ITEM-')) {
             $id = str_replace('ITEM-', '', $qr_id);

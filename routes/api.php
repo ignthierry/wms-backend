@@ -60,7 +60,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('delivery-requests', DeliveryRequestController::class);
     Route::apiResource('dr-items', DrItemController::class);
     Route::apiResource('packings', PackingController::class);
+    
+    // Dispatch Routes
+    Route::get('outbound/ready-to-dispatch', [DispatchController::class, 'readyToDispatch']);
+    Route::post('outbound/dispatch/generate', [DispatchController::class, 'generateSuratJalan']);
     Route::apiResource('dispatches', DispatchController::class);
+    Route::post('outbound/qc/{asn_item_id}', [DispatchController::class, 'outboundQcSubmit']);
+    
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
     
