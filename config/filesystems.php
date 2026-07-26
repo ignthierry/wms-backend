@@ -61,7 +61,10 @@ return [
             'host' => env('SFTP_HOST'),
             'username' => env('SFTP_USERNAME'),
             'password' => env('SFTP_PASSWORD'),
-            'root' => env('SFTP_ROOT', '/home/lunaftp/ftp/upload'),
+            'root' => env('SFTP_ROOT', '/storage/Data/FTP'),
+            'visibility' => 'public',
+            'permPublic' => 0777,
+            'directoryPermPublic' => 0777,
             'throw' => false,
         ],
 

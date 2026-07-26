@@ -25,6 +25,7 @@ use App\Http\Controllers\SystemLogController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ConsigneeController;
 use App\Http\Controllers\TarifController;
+use App\Http\Controllers\AsnItemPhotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('asns', AsnController::class);
 Route::apiResource('asn-items', AsnItemController::class);
+Route::delete('asn-item-photos/{id}', [AsnItemPhotoController::class, 'destroy']);
 Route::get('asn-items/{id}/histories', [App\Http\Controllers\AsnItemController::class, 'histories']);
 Route::apiResource('forwardings', ForwardingController::class);
 Route::apiResource('warehouses', WarehouseController::class);
