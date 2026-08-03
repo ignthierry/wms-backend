@@ -26,6 +26,29 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Catat login ke user_logs (login berlangsung sebelum token ada)
+        try {
+            $ua = $request->userAgent() ?? '';
+            $device = app(\App\Http\Middleware\LogActivity::class)->detectDevice($ua);
+            \App\Models\UserLog::create([
+                'user_id'     => $user->id,
+                'username'    => $user->username,
+                'ip_address'  => $request->ip(),
+                'user_agent'  => substr($ua, 0, 500),
+                'device_type' => $device['type'],
+                'browser'     => $device['browser'],
+                'platform'    => $device['platform'],
+                'activity'    => 'LOGIN',
+                'method'      => 'POST',
+                'endpoint'    => 'auth/login',
+                'description' => 'User login ke sistem',
+                'payload'     => ['username' => $user->username],
+            ]);
+        } catch (\Throwable $e) {
+            // Logging gagal tidak boleh menggagalkan login
+            \Illuminate\Support\Facades\Log::warning('Gagal catat login: ' . $e->getMessage());
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',

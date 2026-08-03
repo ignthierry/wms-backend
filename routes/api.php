@@ -26,6 +26,7 @@ use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\ConsigneeController;
 use App\Http\Controllers\TarifController;
 use App\Http\Controllers\AsnItemPhotoController;
+use App\Http\Controllers\UserLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +50,7 @@ Route::apiResource('consignees', ConsigneeController::class);
 Route::apiResource('tarifs', TarifController::class);
 Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -71,6 +72,11 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
+    
+    // User Log (report aktivitas user)
+    Route::get('user-logs/stats', [UserLogController::class, 'stats']);
+    Route::get('user-logs', [UserLogController::class, 'index']);
+    Route::delete('user-logs/{id}', [UserLogController::class, 'destroy']);
     
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
 
