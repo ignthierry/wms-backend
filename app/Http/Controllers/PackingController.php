@@ -15,10 +15,17 @@ class PackingController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            // Add validation rules here
+            'dr_id' => 'required|exists:delivery_requests,id',
+            'packed_by' => 'required|exists:users,id',
+            'start_time' => 'nullable|date',
+            'end_time' => 'nullable|date',
+            'barcode_scanned_count' => 'nullable|integer|min:0',
+            'packing_photo' => 'nullable|string|max:255',
         ]);
-        // Bypass strict validation for quick scaffold
-        $item = Packing::create($request->all());
+
+        // packing_photo NOT NULL di DB — default string kosong jika tidak dikirim
+        $data['packing_photo'] = $data['packing_photo'] ?? '';
+        $item = Packing::create($data);
         return response()->json($item, 201);
     }
 

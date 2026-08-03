@@ -15,10 +15,16 @@ class DeviationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            // Add validation rules here
+            'receiving_id' => 'required|exists:receivings,id',
+            'item_code' => 'required|string|max:100',
+            'qty_diff' => 'nullable|integer',
+            'damage_condition' => 'nullable|string',
+            'photo_url' => 'nullable|string|max:255',
         ]);
-        // Bypass strict validation for quick scaffold
-        $item = Deviation::create($request->all());
+
+        // photo_url NOT NULL di DB — default string kosong jika tidak dikirim
+        $data['photo_url'] = $data['photo_url'] ?? '';
+        $item = Deviation::create($data);
         return response()->json($item, 201);
     }
 

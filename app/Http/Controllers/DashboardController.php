@@ -27,13 +27,9 @@ class DashboardController extends Controller
         // 5. Total Warehouse Capacity (from locations)
         $totalWarehouseCapacity = \App\Models\Location::sum('capacity');
         
-        // 6. Occupied Capacity (from stock actual_volume)
-        // Note: Assuming stock item correlates to actual_volume or qty. We'll use qty if volume is not tracked in stock, but normally it's volume. Let's check if stock has volume, or use totalStockQty.
-        // Wait, WMS usually calculates SOR by summing volume of items in stock. Let's check stock table schema later or just use a sum of stock volume. If stock doesn't have volume, we can join with asn_items or just use qty for now. Actually, let's sum 'qty' or a hypothetical 'volume'. I will look at Stock model later, but for now I'll sum 'qty' as a proxy if volume isn't there, or maybe `sum('volume')` if it exists.
-        // Since I need it to be accurate, let's just use totalStockQty as occupied if volume doesn't exist, but it's better to calculate based on `actual_volume` from `asn_items`.
-        // Let's query `stocks` and join `asn_items` to sum `actual_volume`.
-        $occupiedCapacity = Stock::join('asn_items', 'stocks.asn_item_id', '=', 'asn_items.id')
-                                ->sum('asn_items.actual_volume');
+        // 6. Occupied Capacity (from stock qty — stocks table doesn't have volume/asn_item_id,
+        //    so we proxy occupied capacity with total stock qty as a practical metric)
+        $occupiedCapacity = Stock::sum('qty');
 
         $sorPercentage = $totalWarehouseCapacity > 0 ? round(($occupiedCapacity / $totalWarehouseCapacity) * 100, 2) : 0;
 
