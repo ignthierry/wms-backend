@@ -80,6 +80,12 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index']);
 
+    // Report / Laporan module
+    Route::get('reports/dashboard', [\App\Http\Controllers\ReportController::class, 'dashboard']);
+    Route::get('reports/invoices', [\App\Http\Controllers\ReportController::class, 'invoices']);
+    Route::get('reports/revenue', [\App\Http\Controllers\ReportController::class, 'revenue']);
+    Route::get('reports/operational', [\App\Http\Controllers\ReportController::class, 'operational']);
+
 });
 
 Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);
