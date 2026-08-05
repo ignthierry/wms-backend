@@ -96,7 +96,9 @@ class ReportController extends Controller
                 'total_inbound' => $asnQ->count(),
                 'total_outbound' => $drQ->count(),
                 'total_revenue' => round($invQ->where('status', 'PAID')->sum('total_amount'), 2),
-                'outstanding' => round($invQ->where('status', 'UNPAID')->sum('total_amount'), 2),
+                'outstanding' => round(Invoice::query()
+                    ->when($from && $to, fn($q) => $q->whereBetween('tgl_invoice', [$from, $to]))
+                    ->where('status', 'UNPAID')->sum('total_amount'), 2),
                 'total_stock_qty' => (int) Stock::sum('qty'),
                 'total_warehouse' => Warehouse::count(),
             ],
