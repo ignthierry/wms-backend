@@ -67,9 +67,11 @@ class ClientController extends Controller
 
         $metrics = [
             'total_items'   => (clone $items)->count(),
+            'pending'       => (clone $items)->where('status', 'PENDING')->count(),
+            'in_warehouse'  => (clone $items)->where('status', 'RECEIVED')->count(),
+            'ready'         => (clone $items)->where('status', 'READY_TO_DISPATCH')->count(),
             'inbound'       => (clone $items)->where('status', 'RECEIVED')->count(),
             'outbound'      => (clone $items)->where('status', 'READY_TO_DISPATCH')->count(),
-            'in_warehouse'  => (clone $items)->where('status', 'PENDING')->count(),
             'unpaid_invoices' => (clone $invoices)->where('status', 'UNPAID')->count(),
         ];
 
@@ -103,6 +105,13 @@ class ClientController extends Controller
         // Filter opsional
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
+        }
+        if ($request->has('manifest') && $request->manifest) {
+            $query->whereHas('asn', function ($q) use ($request) {
+                $q->where('asn_number', 'like', "%{$request->manifest}%")
+                  ->orWhere('no_master_bl', 'like', "%{$request->manifest}%")
+                  ->orWhere('no_container', 'like', "%{$request->manifest}%");
+            });
         }
         if ($request->has('search') && $request->search) {
             $s = $request->search;
@@ -192,5 +201,35 @@ class ClientController extends Controller
         }
 
         return response()->json($item);
+    }
+
+    /**
+     * Daftar manifest (ASN) milik client — untuk dropdown filter di halaman barang.
+     */
+    public function manifests(Request $request)
+    {
+        $consigneeIds = $this->scopeConsigneeIds($request);
+
+        if (empty($consigneeIds)) {
+            return response()->json(['data' => []]);
+        }
+
+        $asnIds = AsnItem::whereIn('consignee_id', $consigneeIds)->pluck('asn_id')->unique();
+
+        $manifests = Asn::whereIn('id', $asnIds)
+            ->get(['id', 'asn_number', 'no_master_bl', 'no_container', 'voyage', 'no_segel'])
+            ->map(function ($asn) {
+                return [
+                    'id'         => $asn->id,
+                    'asn_number' => $asn->asn_number,
+                    'no_master_bl' => $asn->no_master_bl,
+                    'no_container' => $asn->no_container,
+                    'voyage'     => $asn->voyage,
+                    'no_segel'   => $asn->no_segel,
+                    'label'      => $asn->asn_number . ($asn->no_container ? " · {$asn->no_container}" : ''),
+                ];
+            });
+
+        return response()->json(['data' => $manifests]);
     }
 }

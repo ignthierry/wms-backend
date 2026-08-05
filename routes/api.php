@@ -91,6 +91,7 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::get('client/items', [\App\Http\Controllers\ClientController::class, 'items']);
     Route::get('client/items/{id}', [\App\Http\Controllers\ClientController::class, 'itemDetail']);
     Route::get('client/invoices', [\App\Http\Controllers\ClientController::class, 'invoices']);
+    Route::get('client/manifests', [\App\Http\Controllers\ClientController::class, 'manifests']);
     Route::get('client/track/{identifier}', [\App\Http\Controllers\ClientController::class, 'track']);
 
 });
