@@ -209,7 +209,7 @@ class ReportController extends Controller
         return response()->json([
             'group' => $group,
             'status' => $status,
-            'data' => collect($rows)->map(fn($total, $label) => ['label' => $label, 'total' => round($total, 2)]),
+            'data' => collect($rows)->map(fn($total, $label) => ['label' => $label, 'total' => round($total, 2)])->values(),
             'grand_total' => round(array_sum($rows), 2),
         ]);
     }
