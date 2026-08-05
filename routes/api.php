@@ -86,6 +86,13 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::get('reports/revenue', [\App\Http\Controllers\ReportController::class, 'revenue']);
     Route::get('reports/operational', [\App\Http\Controllers\ReportController::class, 'operational']);
 
+    // Client Dashboard (role forwarding / EMKL)
+    Route::get('client/dashboard', [\App\Http\Controllers\ClientController::class, 'dashboard']);
+    Route::get('client/items', [\App\Http\Controllers\ClientController::class, 'items']);
+    Route::get('client/items/{id}', [\App\Http\Controllers\ClientController::class, 'itemDetail']);
+    Route::get('client/invoices', [\App\Http\Controllers\ClientController::class, 'invoices']);
+    Route::get('client/track/{identifier}', [\App\Http\Controllers\ClientController::class, 'track']);
+
 });
 
 Route::get('invoices/calculate/{asn}', [App\Http\Controllers\InvoiceController::class, 'calculate']);

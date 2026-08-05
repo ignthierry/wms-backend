@@ -16,4 +16,14 @@ class Consignee extends Model
         'address',
         'status'
     ];
+
+    public function forwarding()
+    {
+        return $this->belongsTo(Forwarding::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(AsnItem::class);
+    }
 }
