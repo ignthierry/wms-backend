@@ -80,6 +80,51 @@ class DispatchController extends Controller
         return response()->json($items);
     }
 
+    /**
+     * Daftar barang untuk tahap Pengemasan & Verifikasi.
+     * Menampilkan item yang sudah diterima (RECEIVED) — belum siap kirim.
+     */
+    public function packingList()
+    {
+        $items = \App\Models\AsnItem::with(['deliveryRequest', 'invoice', 'asn', 'consignee', 'photos'])
+            ->where('status', 'RECEIVED')
+            ->get();
+
+        return response()->json($items);
+    }
+
+    /**
+     * Verifikasi & selesaikan pengemasan: update status -> READY_TO_DISPATCH.
+     */
+    public function packingSubmit(Request $request, $asn_item_id)
+    {
+        $asnItem = \App\Models\AsnItem::with('deliveryRequest')->findOrFail($asn_item_id);
+
+        if ($request->hasFile('photo_proof_files')) {
+            $files = $request->file('photo_proof_files');
+            foreach ($files as $file) {
+                $path = $file->store('photo_proofs', 'sftp');
+                $asnItem->photos()->create([
+                    'photo_proof' => $path,
+                    'jenis_foto' => 'out',
+                ]);
+            }
+        }
+
+        // Verifikasi packing: qty keluar & kondisi
+        $asnItem->update([
+            'status' => 'READY_TO_DISPATCH',
+            'qty_expected' => $request->input('qty_out', $asnItem->qty_expected),
+            'item_condition' => $request->input('item_condition', $asnItem->item_condition),
+            'remarks' => $request->input('remarks', $asnItem->remarks),
+        ]);
+
+        return response()->json([
+            'message' => 'Pengemasan & verifikasi selesai. Barang siap untuk surat jalan.',
+            'asn_item' => $asnItem->load('photos')
+        ]);
+    }
+
     public function generateSuratJalan(Request $request)
     {
         $data = $request->validate([

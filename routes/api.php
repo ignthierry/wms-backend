@@ -69,6 +69,8 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::post('outbound/dispatch/generate', [DispatchController::class, 'generateSuratJalan']);
     Route::apiResource('dispatches', DispatchController::class);
     Route::post('outbound/qc/{asn_item_id}', [DispatchController::class, 'outboundQcSubmit']);
+    Route::get('outbound/packing', [DispatchController::class, 'packingList']);
+    Route::post('outbound/packing/{asn_item_id}', [DispatchController::class, 'packingSubmit']);
     
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
