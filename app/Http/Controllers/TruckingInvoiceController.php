@@ -79,6 +79,10 @@ class TruckingInvoiceController extends Controller
      */
     public function store(Request $request, $asn_id)
     {
+        // Pastikan type diteruskan ke calculate (baca dari query ATAU body)
+        if ($request->has('type') && !$request->query->has('type')) {
+            $request->query->set('type', $request->input('type'));
+        }
         $calc = $this->calculate($request, $asn_id)->getData(true);
         if (isset($calc['message'])) {
             return response()->json($calc, 422);
