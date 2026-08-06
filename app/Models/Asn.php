@@ -28,7 +28,8 @@ class Asn extends Model
         'no_container',
         'size',
         'qr_id',
-        'trucking_company'
+        'trucking_company',
+        'trucking_company_id'
     ];
 
     protected static function booted()
@@ -58,5 +59,15 @@ class Asn extends Model
     public function invoice()
     {
         return $this->hasOne(Invoice::class);
+    }
+
+    public function truckingCompany()
+    {
+        return $this->belongsTo(TruckingCompany::class, 'trucking_company_id');
+    }
+
+    public function truckingInvoice()
+    {
+        return $this->hasOne(TruckingInvoice::class, 'asn_id');
     }
 }

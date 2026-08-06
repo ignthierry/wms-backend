@@ -27,6 +27,9 @@ use App\Http\Controllers\ConsigneeController;
 use App\Http\Controllers\TarifController;
 use App\Http\Controllers\AsnItemPhotoController;
 use App\Http\Controllers\UserLogController;
+use App\Http\Controllers\TruckingController;
+use App\Http\Controllers\TruckingTarifController;
+use App\Http\Controllers\TruckingInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +74,13 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::post('outbound/qc/{asn_item_id}', [DispatchController::class, 'outboundQcSubmit']);
     Route::get('outbound/packing', [DispatchController::class, 'packingList']);
     Route::post('outbound/packing/{asn_item_id}', [DispatchController::class, 'packingSubmit']);
+
+    // Trucking Supplier
+    Route::apiResource('truckings', TruckingController::class);
+    Route::apiResource('trucking-tarifs', TruckingTarifController::class);
+    Route::get('trucking-invoices/calculate/{asn}', [TruckingInvoiceController::class, 'calculate']);
+    Route::post('trucking-invoices/generate/{asn}', [TruckingInvoiceController::class, 'store']);
+    Route::apiResource('trucking-invoices', TruckingInvoiceController::class);
     
     Route::apiResource('system-logs', SystemLogController::class);
     Route::apiResource('configurations', ConfigurationController::class);
