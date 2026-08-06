@@ -107,6 +107,44 @@ class TruckingInvoiceController extends Controller
         return response()->json(TruckingInvoice::with('company', 'asn')->findOrFail($id));
     }
 
+    /**
+     * Generate invoice trucking TANPA ASN (jasa trucking saja, terpisah).
+     */
+    public function storeStandalone(Request $request)
+    {
+        $data = $request->validate([
+            'trucking_company_id' => 'required|exists:trucking_companies,id',
+            'trucking_fee' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:20',
+            'tgl_invoice' => 'nullable|date',
+        ]);
+
+        $truckingFee = (float) $data['trucking_fee'];
+        $subtotal = $truckingFee;
+        $ppn = $subtotal * 0.11;
+        $total = $subtotal + $ppn;
+
+        $invoice = TruckingInvoice::create([
+            'trucking_company_id' => $data['trucking_company_id'],
+            'asn_id' => null,
+            'invoice_number' => 'TINV-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6)),
+            'invoice_type' => 'trucking',
+            'trucking_fee' => $truckingFee,
+            'warehouse_fee' => 0,
+            'total_amount' => $total,
+            'status' => $data['status'] ?? 'UNPAID',
+            'tgl_invoice' => $data['tgl_invoice'] ?? now()->toDateString(),
+            'details' => [
+                'description' => $data['description'] ?? null,
+                'subtotal' => $subtotal,
+                'ppn' => $ppn,
+            ],
+        ]);
+
+        return response()->json($invoice->load('company', 'asn'), 201);
+    }
+
     public function update(Request $request, $id)
     {
         $invoice = TruckingInvoice::findOrFail($id);

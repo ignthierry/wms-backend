@@ -80,6 +80,7 @@ Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
     Route::apiResource('trucking-tarifs', TruckingTarifController::class);
     Route::get('trucking-invoices/calculate/{asn}', [TruckingInvoiceController::class, 'calculate']);
     Route::post('trucking-invoices/generate/{asn}', [TruckingInvoiceController::class, 'store']);
+    Route::post('trucking-invoices/standalone', [TruckingInvoiceController::class, 'storeStandalone']);
     Route::apiResource('trucking-invoices', TruckingInvoiceController::class);
     
     Route::apiResource('system-logs', SystemLogController::class);
