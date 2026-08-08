@@ -53,7 +53,7 @@ Route::apiResource('consignees', ConsigneeController::class);
 Route::apiResource('tarifs', TarifController::class);
 Route::get('asn-items/qr/{qr_id}', [App\Http\Controllers\AsnItemController::class, 'findByQr']);
 
-Route::middleware(['auth:sanctum', 'log.activity'])->group(function () {
+Route::middleware(['auth:sanctum', 'role.access', 'log.activity'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
