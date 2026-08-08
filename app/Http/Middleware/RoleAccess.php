@@ -47,6 +47,8 @@ class RoleAccess
         }
 
         $path = trim($request->path(), '/');
+        // Hilangkan prefix route group "api/" agar cocok dengan daftar prefix
+        $path = preg_replace('#^api/#', '', $path);
 
         if ($role === 'operator_field') {
             foreach (self::OPERATOR_ALLOWED as $prefix) {
